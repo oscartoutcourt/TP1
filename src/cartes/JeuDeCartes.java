@@ -59,16 +59,13 @@ public class JeuDeCartes {
 		Carte[] cartes = donnerCartes();
 		int j=0;
 		for (Configuration configuration : typesDeCartes) {
-			System.out.println(configuration.getCarte());
-			for(int i=j; i<configuration.getNbExemplaires()+j;i++) {
-				if(!cartes[i].equals(configuration.getCarte())) {
+			for(int i=0; i<configuration.getNbExemplaires(); i++, j++) {
+				if(!cartes[j].equals(configuration.getCarte())){
 					return false;
 				}
-				j++;
 			}
 		}
 		return true;
-		
 	}
 
 }
