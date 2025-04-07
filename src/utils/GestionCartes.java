@@ -9,11 +9,9 @@ import java.util.Random;
 public class GestionCartes {
 	public static <T> T extraire1(List<T> liste) {
 		Random r = new Random();
-		int ind = r.nextInt(liste.length-1);
-		T output = liste[ind];
-		for(int i=ind; i<liste.length-1; i++) {
-			liste[i]=liste[i+1];
-		}
+		int ind = r.nextInt(liste.size()-1);
+		T output = liste.get(ind);
+		liste.remove(ind);
 		return output;
 	}
 	
@@ -28,9 +26,10 @@ public class GestionCartes {
 	
 	public static <T> List<T> melanger(List<T> l){
 		List<T> output= new ArrayList<>();
-		while(!l.isEmpty()) {
-			output.add(extraire2(l));
+		while(l.size()!=1) {
+			output.add(extraire1(l));
 		}
+		output.add(l.get(0));
 		return output;
 	}
 	
