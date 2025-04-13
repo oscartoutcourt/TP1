@@ -47,13 +47,15 @@ public class GestionCartes {
 	public static <T> List<T> rassembler(List<T> l) {
 		List<T> output= new ArrayList<>();
 		while(!l.isEmpty()) {
+			List<T> toRemove = new ArrayList<>();
 			T elt = l.get(0);
 			for(T e : l) {
 				if(e==elt) {
 					output.add(e);
-					l.remove(e);
+					toRemove.add(e);
 				}
 			}
+			l.removeAll(toRemove);
 		}
 		return output;
 	}
@@ -62,13 +64,15 @@ public class GestionCartes {
 		ListIterator<T> it=l.listIterator();
 		T previous=null;
 		while(it.hasNext()) {
-			if(it.next()!=previous) {
+			T current= it.next();
+			if(current!=previous) {
 				ListIterator<T> it2=l.listIterator(it.nextIndex());
 				while(it2.hasNext()) {
 					if(it2.next()==previous) {
 						return false;
 					}
 				}
+				previous=current;
 			}
 		}
 		return true;
