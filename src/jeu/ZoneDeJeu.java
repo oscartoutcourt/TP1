@@ -1,7 +1,7 @@
 package jeu;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import cartes.Attaque;
@@ -15,12 +15,12 @@ import cartes.Parade;
 import cartes.Type;
 
 public class ZoneDeJeu {
-	List<Limite> pileLimite= new ArrayList<Limite>();
-	List<Bataille> pileBataille= new ArrayList<Bataille>();
-	Collection<Borne> bornes= new ArrayList<Borne>();
+	List<Limite> pileLimite= new LinkedList<>();
+	List<Bataille> pileBataille= new LinkedList<>();
+	Collection<Borne> bornes= new LinkedList<>();
 	
 	public int donnerLimitationVitesse() {
-		if(pileLimite.isEmpty() || pileLimite.getLast() instanceof FinLimite) {
+		if(pileLimite.isEmpty() || pileLimite.get(0) instanceof FinLimite) {
 			return 200;
 		}
 		return 50;
@@ -34,24 +34,23 @@ public class ZoneDeJeu {
 		return somme;
 	}
 	
-	public void deposer(Carte c) {
-		if(c instanceof Borne) {
-			bornes.add((Borne) c);
-		}else if(c instanceof Limite) {
-			pileLimite.add((Limite) c);
+	public void deposer(Carte carte) {
+		if(carte instanceof Borne borne) {
+			bornes.add(borne);
+		}else if(carte instanceof Limite limite) {
+			pileLimite.add(0, limite);
 		}else {
-			pileBataille.add((Bataille) c);
+			pileBataille.add(0, (Bataille) carte);
 		}
 	}
 	
 	public boolean peutAvancer() {
-		return !pileBataille.isEmpty() && pileBataille.getLast().equals(new Parade(Type.FEU));
+		return !pileBataille.isEmpty() && pileBataille.get(0).equals(new Parade(Type.FEU));
 	}
 	
 	public boolean estDepotFeuVertAutorise() {
-		Bataille sommet = pileBataille.getLast();
-		return !pileBataille.isEmpty() || sommet.equals(new Attaque(Type.FEU)) 
-				|| (sommet instanceof Parade && !sommet.equals(new Parade(Type.FEU)));
+		return pileBataille.isEmpty() || pileBataille.get(0).equals(new Attaque(Type.FEU)) 
+				|| (pileBataille.get(0) instanceof Parade && !pileBataille.get(0).equals(new Parade(Type.FEU)));
 	}
 	
 	public boolean estDepotBorneAutorise(Borne borne) {
@@ -60,9 +59,9 @@ public class ZoneDeJeu {
 	
 	public boolean estDepotLimiteAutorise(Limite limite) {
 		if(limite instanceof DebutLimite) {
-			return pileLimite.isEmpty() || pileLimite.getLast() instanceof FinLimite;
+			return pileLimite.isEmpty() || pileLimite.get(0) instanceof FinLimite;
 		}
-		return !pileLimite.isEmpty() && pileLimite.getLast() instanceof DebutLimite;
+		return !pileLimite.isEmpty() && pileLimite.get(0) instanceof DebutLimite;
 	}
 	
 	public boolean estDepotBatailleAutorise(Bataille bataille) {
@@ -72,15 +71,15 @@ public class ZoneDeJeu {
 			if(bataille.equals(new Parade(Type.FEU))) {
 				return estDepotFeuVertAutorise();
 			}
-			return !pileBataille.isEmpty() && pileBataille.getLast().equals(bataille);
+			return !pileBataille.isEmpty() && pileBataille.get(0).equals(bataille);
 		}
 	}
 	
 	public boolean estDepotAutorise(Carte carte) {
-		if(carte instanceof Bataille) {
-			return estDepotBatailleAutorise((Bataille) carte);
-		}else if(carte instanceof Borne) {
-			return estDepotBorneAutorise((Borne) carte);
+		if(carte instanceof Bataille bataille) {
+			return estDepotBatailleAutorise(bataille);
+		}else if(carte instanceof Borne borne) {
+			return estDepotBorneAutorise(borne);
 		}else {
 			return estDepotLimiteAutorise((Limite) carte);
 		}

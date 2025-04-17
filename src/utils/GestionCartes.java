@@ -7,77 +7,81 @@ import java.util.ListIterator;
 import java.util.Random;
 
 public class GestionCartes {
-	public static <T> T extraire1(List<T> liste) {
-		Random r = new Random();
-		int ind = r.nextInt(liste.size()-1);
-		T output = liste.get(ind);
-		liste.remove(ind);
+	private static Random rand = new Random();
+	
+	private GestionCartes() {
+	    throw new IllegalStateException("Utility class");
+	  }
+	
+	public static <T> T extraire1(List<T> list) {
+		int ind = rand.nextInt(list.size());
+		T output = list.get(ind);
+		list.remove(ind);
 		return output;
 	}
-	
-	public static <T> T extraire2(List<T> liste) {
-		Random r = new Random();
-		int ind = r.nextInt(liste.size()-1);
-		ListIterator<T> it= liste.listIterator(ind);
+
+	public static <T> T extraire2(List<T> list) {
+		int ind = rand.nextInt(list.size());
+		ListIterator<T> it = list.listIterator(ind);
 		T output = it.next();
 		it.remove();
 		return output;
 	}
-	
-	public static <T> List<T> melanger(List<T> l){
-		List<T> output= new ArrayList<>();
-		while(l.size()!=1) {
-			output.add(extraire1(l));
+
+	public static <T> List<T> melanger(List<T> list) {
+		List<T> output = new ArrayList<>();
+		while (list.size() != 1) {
+			output.add(extraire1(list));
 		}
-		output.add(l.get(0));
+		output.add(list.get(0));
 		return output;
 	}
-	
+
 	public static <T> boolean verifierMelange(List<T> l1, List<T> l2) {
-		ListIterator<T> it1= l1.listIterator();
-		while(it1.hasNext()) {
-			T elt=it1.next();
-			if(Collections.frequency(l1, elt)!=Collections.frequency(l2, elt)) {
+		for (T i : l1) {
+			if (Collections.frequency(l1, i) != Collections.frequency(l2, i)) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
-	public static <T> List<T> rassembler(List<T> l) {
-		List<T> output= new ArrayList<>();
-		while(!l.isEmpty()) {
+
+	public static <T> List<T> rassembler(List<T> list) {
+		List<T> output = new ArrayList<>();
+		while (!list.isEmpty()) {
 			List<T> toRemove = new ArrayList<>();
-			T elt = l.get(0);
-			for(T e : l) {
-				if(e==elt) {
+			T elt = list.get(0);
+			for (T e : list) {
+				if (e == elt) {
 					output.add(e);
 					toRemove.add(e);
 				}
 			}
-			l.removeAll(toRemove);
+			list.removeAll(toRemove);
 		}
 		return output;
 	}
 	
-	public static <T> boolean verifierRassemblement(List<T> l) {
-		ListIterator<T> it=l.listIterator();
-		T previous=null;
-		while(it.hasNext()) {
-			T current= it.next();
-			if(current!=previous) {
-				ListIterator<T> it2=l.listIterator(it.nextIndex());
-				while(it2.hasNext()) {
-					if(it2.next()==previous) {
-						return false;
-					}
+	private static <T> boolean checkReste(int ind, List<T> list, T elt) {
+		for(ListIterator<T> iter = list.listIterator(ind); iter.hasNext();) {
+			if(iter.next().equals(elt)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static <T> boolean verifierRassemblement(List<T> list) {
+		T previous = null;
+		for(ListIterator<T> iter = list.listIterator(); iter.hasNext();) {
+			T current = iter.next();
+			if (current != previous) {
+				if(checkReste(iter.nextIndex(), list, previous)) {
+					return false;
 				}
-				previous=current;
+				previous = current;
 			}
 		}
 		return true;
 	}
 }
-
-
-

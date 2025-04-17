@@ -54,13 +54,13 @@ public class JeuDeCartes {
 		}
 		return cartes;
 	}
-	
+
 	public boolean checkCount() {
 		Carte[] cartes = donnerCartes();
-		int j=0;
+		int j = 0;
 		for (Configuration configuration : typesDeCartes) {
-			for(int i=0; i<configuration.getNbExemplaires(); i++, j++) {
-				if(!cartes[j].equals(configuration.getCarte())){
+			for (int i = 0; i < configuration.getNbExemplaires(); i++, j++) {
+				if (!cartes[j].equals(configuration.getCarte())) {
 					return false;
 				}
 			}

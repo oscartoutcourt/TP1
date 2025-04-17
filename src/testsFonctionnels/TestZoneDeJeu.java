@@ -142,7 +142,7 @@ public class TestZoneDeJeu {
 //			dï¿½pï¿½t ok ? false
 //			peut avancer ? false
 //			Deposer carte attaque - accident
-//			dï¿½pï¿½t ok ? false
+//			dépot ok ? false
 //			peut avancer ? false
 //			Deposer carte Feu vert
 //			dï¿½pï¿½t ok ? true

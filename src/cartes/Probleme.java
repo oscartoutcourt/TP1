@@ -13,10 +13,6 @@ public abstract class Probleme extends Carte {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (super.equals(obj)) {
-			Probleme prblme= (Probleme) obj;
-			return type == prblme.getType();
-		}
-		return false;
+		return super.equals(obj) && ((Probleme) obj).getType() == type;
 	}
 }
